@@ -144,10 +144,10 @@ spec:
         {{- end }}
         {{- range $key, $val := .Values.env }}
         - name: {{ $key }}
-          value: "{{ $val }}"
+          value: {{ $val | quote }}
         {{- end }}
         - name: VALKEY_LOG_LEVEL
-          value: "{{ .Values.valkeyLogLevel }}"
+          value: {{ .Values.valkeyLogLevel | quote }}
       ports:
         - name: tcp
           containerPort: {{ .Values.service.port }}
@@ -294,7 +294,7 @@ spec:
         {{- end }}
         {{- range $key, $val := .Values.metrics.exporter.extraEnvs }}
         - name: {{ $key }}
-          value: "{{ $val }}"
+          value: {{ $val | quote }}
         {{- end }}
     {{- end }}
   {{- with .Values.extraContainers }}

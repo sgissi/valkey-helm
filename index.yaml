@@ -2,6 +2,28 @@ apiVersion: v1
 entries:
   valkey:
   - apiVersion: v2
+    appVersion: 9.1.2
+    created: "2026-10-02T02:30:51.15016771Z"
+    description: A Helm chart for Kubernetes
+    digest: 7cfd3d8276e86843a5a2301de750430371688f59e425dfa8c4f3c270183b8329
+    home: https://valkey.io/valkey-helm/
+    icon: https://dyltqmyl993wv.cloudfront.net/assets/stacks/valkey/img/valkey-stack-220x234.png
+    maintainers:
+    - name: raven
+      url: https://github.com/mk-raven
+    - name: sgissi
+      url: https://github.com/sgissi
+    - name: Bloodraven21
+      url: https://github.com/Bloodraven21
+    name: valkey
+    sources:
+    - https://github.com/valkey-io/valkey-helm.git
+    - https://valkey.io
+    type: application
+    urls:
+    - https://github.com/sgissi/valkey-helm/releases/download/valkey-0.12.0/valkey-0.12.0.tgz
+    version: 0.12.0
+  - apiVersion: v2
     appVersion: 9.0.1
     created: "2025-12-18T20:25:14.421037609Z"
     description: A Helm chart for Kubernetes
@@ -331,4 +353,53 @@ entries:
     urls:
     - https://valkey.io/valkey-helm/valkey-0.1.0.tgz
     version: 0.1.0
-generated: "2025-12-18T20:25:14.421184413Z"
+  valkey-operator:
+  - apiVersion: v2
+    appVersion: v0.7.1
+    created: "2026-10-02T02:30:51.397496045Z"
+    description: A Helm chart for the Valkey Operator
+    digest: 94e9c330746b661ce0b7256165e2f6b7fa07545b65a217cb3345c4153d3558fa
+    home: https://valkey.io/valkey-helm/
+    icon: https://dyltqmyl993wv.cloudfront.net/assets/stacks/valkey/img/valkey-stack-220x234.png
+    kubeVersion: '>=1.20.0-0'
+    maintainers:
+    - name: daanvinken
+      url: https://github.com/daanvinken
+    - name: jdheyburn
+      url: https://github.com/jdheyburn
+    - name: Bloodraven21
+      url: https://github.com/Bloodraven21
+    name: valkey-operator
+    sources:
+    - https://github.com/valkey-io/valkey-operator.git
+    - https://valkey.io
+    type: application
+    urls:
+    - https://github.com/sgissi/valkey-helm/releases/download/valkey-operator-0.7.0/valkey-operator-0.7.0.tgz
+    version: 0.7.0
+  valkey-resources:
+  - apiVersion: v2
+    appVersion: v0.7.1
+    created: "2026-10-02T02:30:51.582053588Z"
+    description: Helm chart for operator-managed Valkey resources (ValkeyCluster)
+    digest: 5ff26f33cfd68f321737af25cbc14e726ac5296e9439f87a15f62785b8ac7c19
+    home: https://valkey.io/valkey-helm/
+    icon: https://dyltqmyl993wv.cloudfront.net/assets/stacks/valkey/img/valkey-stack-220x234.png
+    kubeVersion: '>=1.20.0-0'
+    maintainers:
+    - name: daanvinken
+      url: https://github.com/daanvinken
+    - name: Bloodraven21
+      url: https://github.com/Bloodraven21
+    - name: Sagar2366
+      url: https://github.com/sagar2366
+    name: valkey-resources
+    sources:
+    - https://github.com/valkey-io/valkey-helm.git
+    - https://github.com/valkey-io/valkey-operator.git
+    - https://valkey.io
+    type: application
+    urls:
+    - https://github.com/sgissi/valkey-helm/releases/download/valkey-resources-0.3.0/valkey-resources-0.3.0.tgz
+    version: 0.3.0
+generated: "2026-10-02T02:30:51.582198768Z"

@@ -30,6 +30,9 @@ metadata:
     {{- if .Values.valkeyConfig }}
     checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum | trunc 32 | quote }}
     {{- end }}
+    {{- with (include "valkey.authSecretChecksum" .) }}
+    checksum/secret: {{ . | quote }}
+    {{- end }}
 spec:
   {{- include "valkey.imagePullSecrets" . | nindent 2 }}
   {{- if $replicated }}
@@ -101,7 +104,7 @@ spec:
           mountPath: /valkey-users-secret
           readOnly: true
         {{- end }}
-        {{- if or (include "valkey.hasInlinePasswords" . | eq "true") .Values.auth.aclConfig }}
+        {{- if (include "valkey.renderAuthSecret" .) | eq "true" }}
         - name: valkey-auth-secret
           mountPath: /valkey-auth-secret
           readOnly: true
@@ -195,7 +198,7 @@ spec:
           mountPath: /valkey-users-secret
           readOnly: true
         {{- end }}
-        {{- if or (include "valkey.hasInlinePasswords" . | eq "true") .Values.auth.aclConfig }}
+        {{- if (include "valkey.renderAuthSecret" .) | eq "true" }}
         - name: valkey-auth-secret
           mountPath: /valkey-auth-secret
           readOnly: true
@@ -381,7 +384,7 @@ spec:
         secretName: {{ tpl .Values.auth.usersExistingSecret . }}
         defaultMode: 0400
     {{- end }}
-    {{- if or (include "valkey.hasInlinePasswords" . | eq "true") .Values.auth.aclConfig }}
+    {{- if (include "valkey.renderAuthSecret" .) | eq "true" }}
     - name: valkey-auth-secret
       secret:
         secretName: {{ include "valkey.fullname" . }}-auth

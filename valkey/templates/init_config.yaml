@@ -37,7 +37,8 @@ data:
 
     CONF="${VALKEY_CONFIG_PATH:-/valkey-conf/valkey.conf}"
     MARKER="/data/conf/last-master"
-    SELF="{{ include "valkey.fullname" . }}-${POD_INDEX:-0}.{{ include "valkey.headlessServiceName" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
+    {{- include "valkey.resolvePodIndex" . | nindent 4 }}
+    SELF="{{ include "valkey.fullname" . }}-${POD_INDEX}.{{ include "valkey.headlessServiceName" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
 
     track_master() {
       # Word splitting is what parses each config line, so keep globbing off:
@@ -285,8 +286,7 @@ data:
     # Replica mode configuration
     log "Configuring replication mode"
 
-    # Use POD_INDEX from Kubernetes metadata
-    POD_INDEX=${POD_INDEX:-0}
+    {{- include "valkey.resolvePodIndex" . | nindent 4 }}
     MASTER_HOST="{{ include "valkey.fullname" . }}-0.{{ include "valkey.headlessServiceName" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}"
     MASTER_PORT="{{ .Values.service.port }}"
 

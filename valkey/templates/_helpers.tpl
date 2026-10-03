@@ -203,6 +203,26 @@ app.kubernetes.io/component: sentinel
 {{- end -}}
 
 {{/*
+Shell lines that set POD_INDEX to this StatefulSet pod's ordinal, shared by
+init.sh and valkey-start.sh. The value comes from the
+apps.kubernetes.io/pod-index label, which Kubernetes only sets from 1.28;
+before that the variable is empty. Defaulting it to 0 would make every pod
+take itself for pod-0, the master, so fall back to the hostname, which for a
+StatefulSet pod ends in the ordinal, and refuse to start when neither gives
+a number.
+*/}}
+{{- define "valkey.resolvePodIndex" -}}
+POD_HOSTNAME="${HOSTNAME:-}"
+POD_INDEX="${POD_INDEX:-${POD_HOSTNAME##*-}}"
+case "$POD_INDEX" in
+  ""|*[!0-9]*)
+    echo "$(date) ERROR: cannot tell this pod's StatefulSet ordinal: no pod-index label and hostname '$POD_HOSTNAME' does not end in one" >&2
+    exit 1
+    ;;
+esac
+{{- end -}}
+
+{{/*
 Validate replica persistence configuration
 */}}
 {{- define "valkey.validateReplicaPersistence" -}}

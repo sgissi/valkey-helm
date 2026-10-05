@@ -567,15 +567,16 @@ data:
       {{- end }}
     fi
 
-    {{- if gt (int .Values.replica.minReplicasToWrite) 0 }}
+    {{- $minReplicasToWrite := include "valkey.minReplicasToWrite" . | int }}
+    {{- if gt $minReplicasToWrite 0 }}
     # Write safety - require minimum healthy replicas
     {
       echo ""
       echo "# Minimum replicas for write operations"
-      echo "min-replicas-to-write {{ .Values.replica.minReplicasToWrite }}"
+      echo "min-replicas-to-write {{ $minReplicasToWrite }}"
       echo "min-replicas-max-lag {{ .Values.replica.minReplicasMaxLag }}"
     } >>"$VALKEY_CONFIG_TMP"
-    log "Configured write safety: require {{ .Values.replica.minReplicasToWrite }} replicas with max {{ .Values.replica.minReplicasMaxLag }}s lag"
+    log "Configured write safety: require {{ $minReplicasToWrite }} replicas with max {{ .Values.replica.minReplicasMaxLag }}s lag"
     {{- end }}
     {{- end }}
 

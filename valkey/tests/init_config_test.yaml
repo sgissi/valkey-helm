@@ -214,3 +214,61 @@ tests:
       - notMatchRegex:
           path: data["valkey-start.sh"]
           pattern: 'POD_INDEX:-0'
+
+  - it: should require one replica for writes by default with sentinel
+    set:
+      replica.enabled: true
+      persistence.enabled: true
+      persistence.size: 1Gi
+      sentinel.enabled: true
+      sentinel.password: "sentinel-password"
+    asserts:
+      - matchRegex:
+          path: data["init.sh"]
+          pattern: 'echo "min-replicas-to-write 1"\n\s*echo "min-replicas-max-lag 10"'
+
+  - it: should not require replicas for writes by default without sentinel
+    set:
+      replica.enabled: true
+      persistence.enabled: true
+      persistence.size: 1Gi
+    asserts:
+      - notMatchRegex:
+          path: data["init.sh"]
+          pattern: "min-replicas-to-write"
+
+  - it: should let an explicit zero disable min-replicas-to-write with sentinel
+    set:
+      replica.enabled: true
+      persistence.enabled: true
+      persistence.size: 1Gi
+      sentinel.enabled: true
+      sentinel.password: "sentinel-password"
+      replica.minReplicasToWrite: 0
+    asserts:
+      - notMatchRegex:
+          path: data["init.sh"]
+          pattern: "min-replicas-to-write"
+
+  - it: should honour an explicit min-replicas-to-write without sentinel
+    set:
+      replica.enabled: true
+      persistence.enabled: true
+      persistence.size: 1Gi
+      replica.minReplicasToWrite: 2
+      replica.minReplicasMaxLag: 5
+    asserts:
+      - matchRegex:
+          path: data["init.sh"]
+          pattern: 'echo "min-replicas-to-write 2"\n\s*echo "min-replicas-max-lag 5"'
+
+  - it: should fail when min-replicas-to-write leaves no room for the master
+    set:
+      replica.enabled: true
+      persistence.enabled: true
+      persistence.size: 1Gi
+      replica.replicas: 2
+      replica.minReplicasToWrite: 2
+    asserts:
+      - failedTemplate:
+          errorPattern: "replica.minReplicasToWrite \\(2\\) must be lower than replica.replicas \\(2\\)"

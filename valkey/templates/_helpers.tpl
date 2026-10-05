@@ -411,6 +411,25 @@ have to be given twice: once inside sentinel_kwargs and once beside it.
 {{/*
 Validate sentinel configuration
 */}}
+{{/*
+Effective min-replicas-to-write. Unset (null) means 1 with Sentinel and 0
+without: a master that Sentinel can no longer reach keeps answering
+role:master, and clients still connected to it would otherwise keep writing
+for as long as the partition lasts, writes that are discarded once it rejoins
+as a replica. With 1, it refuses writes once Sentinel has moved its replicas
+to the new master. An explicit 0 disables the check.
+*/}}
+{{- define "valkey.minReplicasToWrite" -}}
+{{- $min := .Values.replica.minReplicasToWrite }}
+{{- if kindIs "invalid" $min }}
+  {{- $min = ternary 1 0 (and .Values.replica.enabled .Values.sentinel.enabled) }}
+{{- end }}
+{{- if ge (int $min) (int .Values.replica.replicas) }}
+  {{- fail (printf "replica.minReplicasToWrite (%d) must be lower than replica.replicas (%d), which counts the master too, otherwise the master would refuse every write." (int $min) (int .Values.replica.replicas)) }}
+{{- end }}
+{{- int $min }}
+{{- end -}}
+
 {{- define "valkey.validateSentinelConfig" -}}
 {{- if .Values.sentinel.enabled }}
   {{- if not .Values.replica.enabled }}

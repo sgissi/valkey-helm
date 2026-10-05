@@ -71,6 +71,13 @@ replica:
 
 If fewer than `minReplicasToWrite` replicas are available, the master will reject write operations.
 
+Left unset, `minReplicasToWrite` is 1 with Sentinel and 0 without.
+A master cut off from the Sentinels still answers `role:master`, so clients that stay connected to it, through HAProxy or directly, keep writing after Sentinel has promoted another node.
+Those writes are discarded when the old master rejoins as a replica.
+With `minReplicasToWrite: 1`, it refuses writes as soon as Sentinel has moved its replicas to the new master, or after `minReplicasMaxLag` seconds if they are cut off too.
+The trade-off is that the master also refuses writes while no replica is attached, for example while the only replica restarts when `replica.replicas` is 2.
+Set it to 0 explicitly to turn the check off.
+
 ### High Availability Mode (Sentinel)
 
 Replication mode alone does not recover from a master failure: the master is always pod-0 and a client keeps writing to it until an operator intervenes.
@@ -670,7 +677,7 @@ tls:
 | replica.replicas | int | `3` | Valkey pods, the master included; at least 1 (2 with Sentinel) |
 | replica.replicationUser | string | `"default"` |  |
 | replica.disklessSync | bool | `false` |  |
-| replica.minReplicasToWrite | int | `0` |  |
+| replica.minReplicasToWrite | int | `nil` | 1 with Sentinel, 0 without |
 | replica.minReplicasMaxLag | int | `10` |  |
 | replica.service.enabled | bool | `"true"` |  |
 | replica.service.type | string | `"ClusterIP"` |  |

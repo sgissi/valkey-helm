@@ -1,11 +1,66 @@
 apiVersion: v1
 entries:
   valkey:
+  - annotations:
+      artifacthub.io/changes: |
+        - kind: added
+          description: Valkey Sentinel for automatic failover, with coordinated failover on graceful shutdown (requires Valkey 9.0 or later)
+        - kind: added
+          description: Optional HAProxy front-end that routes clients to the master named by a Sentinel majority
+        - kind: added
+          description: tls.volume accepts any volume source for the TLS files
+        - kind: changed
+          description: Readiness probe enabled by default
+        - kind: changed
+          description: Standalone deploymentStrategy defaults to Recreate
+        - kind: changed
+          description: "Breaking: persistence, extraConfig, extraEnv, extraVolumes/extraVolumeMounts, metrics labels/annotations and networkPolicy reworked; replica.replicas counts all pods. Removed keys are refused at render. See UPGRADE.md"
+        - kind: security
+          description: Metrics exporter hardened by default (restricted Pod Security Standard)
+      artifacthub.io/images: |
+        - name: valkey
+          image: docker.io/valkey/valkey:9.1.3
+        - name: haproxy
+          image: docker.io/haproxy:3.2-alpine
+        - name: redis-exporter
+          image: ghcr.io/oliver006/redis_exporter:v1.88.0
+      artifacthub.io/license: BSD-3-Clause
+      artifacthub.io/links: |
+        - name: Upgrading from 0.x
+          url: https://github.com/valkey-io/valkey-helm/blob/main/valkey/UPGRADE.md
+    apiVersion: v2
+    appVersion: 9.1.3
+    created: "2026-11-13T18:21:36.453693889Z"
+    description: Valkey, an open source, high-performance in-memory datastore
+    digest: 61c6a7b7a67ce9cd1d589c25a7f5f2361430c90a195bec76b55edb80a04c8fcd
+    home: https://valkey.io/valkey-helm/
+    icon: https://dyltqmyl993wv.cloudfront.net/assets/stacks/valkey/img/valkey-stack-220x234.png
+    keywords:
+    - valkey
+    - key-value
+    - cache
+    - database
+    - sentinel
+    maintainers:
+    - name: raven
+      url: https://github.com/mk-raven
+    - name: sgissi
+      url: https://github.com/sgissi
+    - name: Bloodraven21
+      url: https://github.com/Bloodraven21
+    name: valkey
+    sources:
+    - https://github.com/valkey-io/valkey-helm.git
+    - https://valkey.io
+    type: application
+    urls:
+    - https://github.com/sgissi/valkey-helm/releases/download/valkey-1.0.0/valkey-1.0.0.tgz
+    version: 1.0.0
   - apiVersion: v2
     appVersion: 9.1.3
-    created: "2026-11-12T20:11:32.682266641Z"
+    created: "2026-10-29T19:44:05.041939421Z"
     description: Valkey, an open source, high-performance in-memory datastore
-    digest: dc29d182bb47e0d4db7287728e08e6ea2bdfcb471f2efcaff963b4349dd757b1
+    digest: 16e2b983a052d657d2b4c35a4896b3f741688d231156cf1db8adfbf4af28f6c4
     home: https://valkey.io/valkey-helm/
     icon: https://dyltqmyl993wv.cloudfront.net/assets/stacks/valkey/img/valkey-stack-220x234.png
     maintainers:
@@ -25,9 +80,9 @@ entries:
     version: 1.0.0-rc.1
   - apiVersion: v2
     appVersion: 9.1.3
-    created: "2026-10-29T19:44:05.041939421Z"
+    created: "2026-11-12T20:11:32.682266641Z"
     description: Valkey, an open source, high-performance in-memory datastore
-    digest: 16e2b983a052d657d2b4c35a4896b3f741688d231156cf1db8adfbf4af28f6c4
+    digest: dc29d182bb47e0d4db7287728e08e6ea2bdfcb471f2efcaff963b4349dd757b1
     home: https://valkey.io/valkey-helm/
     icon: https://dyltqmyl993wv.cloudfront.net/assets/stacks/valkey/img/valkey-stack-220x234.png
     maintainers:
@@ -540,4 +595,4 @@ entries:
     urls:
     - https://github.com/sgissi/valkey-helm/releases/download/valkey-resources-0.3.0/valkey-resources-0.3.0.tgz
     version: 0.3.0
-generated: "2026-11-12T20:11:33.223209113Z"
+generated: "2026-11-13T18:21:36.453905173Z"
